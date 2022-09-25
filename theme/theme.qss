@@ -1,0 +1,36 @@
+
+PSettingsPage #lstGroups {
+    border: none;
+    border-right: 1px solid black;
+    background-color: transparent;
+}
+
+PSettingsPage #lstGroups::item {
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+PSettingsPage #lstGroups::item:selected {
+    background-color: @settingspageitemselected;
+    color: @active;
+}
+
+PSettingsPage #lstGroups::focus {
+    border: none;
+    border-right: 1px solid black;
+}
+
+PSettingsPage #itemTitle {
+    color: @active;
+}
+
+PSettingsPage #itemDescription {
+    color: #CCCCCC;
+}
+
+PSettingsPage #itemEdit {
+    margin-top: 5px;
+    color: red;
+}
