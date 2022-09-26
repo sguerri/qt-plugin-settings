@@ -1,4 +1,3 @@
-QT -= gui
 QT += widgets
 
 TEMPLATE = lib
