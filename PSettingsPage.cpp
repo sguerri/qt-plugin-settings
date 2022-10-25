@@ -3,14 +3,16 @@
 
 #include <QSettings>
 #include <QLineEdit>
+#include <QDebug>
 
 PSettingsPage::PSettingsPage(QMainWindow* parent) :
     QWidget(parent),
     ui(new Ui::PSettingsPage),
     parent(parent)
 {
-    ui->setupUi(this);
+    parent->setProperty("hasSettingsPage", true);
 
+    ui->setupUi(this);
     connect(ui->btBack, &QPushButton::clicked, this, &PSettingsPage::hide);
     connect(ui->lstGroups, &QListWidget::currentItemChanged, this, &PSettingsPage::onGroupSelected);
 
@@ -25,32 +27,55 @@ PSettingsPage::~PSettingsPage()
 
 void PSettingsPage::show()
 {
-    plugin->setVisible(true);
-    main->setVisible(false);
+    for (auto c: parent->centralWidget()->children()) {
+        if (c->objectName() == "centralwidget") {
+            static_cast<QWidget*>(c)->setVisible(false);
+        } else if (c->objectName() == "PSettingsPage") {
+            static_cast<QWidget*>(c)->setVisible(true);
+        } else if (c->objectName().startsWith("P") && c->objectName().endsWith("Page")) {
+            static_cast<QWidget*>(c)->setVisible(false);
+        }
+    }
+
+    //plugin->setVisible(true);
+    //main->setVisible(false);
 }
 
 void PSettingsPage::hide()
 {
-    plugin->setVisible(false);
-    main->setVisible(true);
+    for (auto c: parent->centralWidget()->children()) {
+        if (c->objectName() == "centralwidget") {
+            static_cast<QWidget*>(c)->setVisible(true);
+        } else if (c->objectName().startsWith("P") && c->objectName().endsWith("Page")) {
+            static_cast<QWidget*>(c)->setVisible(false);
+        }
+    }
+    //plugin->setVisible(false);
+    //main->setVisible(true);
 }
 
 void PSettingsPage::initUi()
 {
-    main = parent->centralWidget();
+    auto main = parent->centralWidget();
 
-    QHBoxLayout* layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(this);
-    layout->addWidget(parent->centralWidget());
+    //plugin = this;
+    this->setVisible(false);
 
-    QWidget* global = new QWidget();
-    global->setLayout(layout);
+    if (main->objectName() == "pluginLayout") {
+        main->layout()->addWidget(this);
 
-    plugin = this;
-    plugin->setVisible(false);
+    } else {
+        QHBoxLayout* layout = new QHBoxLayout();
+        layout->setContentsMargins(0, 0, 0, 0);
+        layout->addWidget(this);
+        layout->addWidget(parent->centralWidget());
 
-    parent->setCentralWidget(global);
+        QWidget* global = new QWidget();
+        global->setLayout(layout);
+        global->setObjectName("pluginLayout");
+
+        parent->setCentralWidget(global);
+    }
 }
 
 void PSettingsPage::load()
