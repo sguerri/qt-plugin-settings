@@ -27,8 +27,8 @@ private:
     QSettings settings;
 
     QMainWindow* parent;
-    QWidget* plugin;
-    QWidget* main;
+    //QWidget* plugin;
+    //QWidget* main;
 
     //void hide();
     void initUi();
