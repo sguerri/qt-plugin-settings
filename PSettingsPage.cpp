@@ -3,6 +3,7 @@
 
 #include <QSettings>
 #include <QLineEdit>
+#include <QCheckBox>
 #include <QDebug>
 
 PSettingsPage::PSettingsPage(QMainWindow* parent) :
@@ -108,9 +109,12 @@ void PSettingsPage::onGroupSelected(QListWidgetItem* item)
         const auto& value = settings.value(key);
         const auto& description = settings.value(key + "::description", "").toString();
         bool editable = settings.value(key + "::editable", true).toBool();
+        //qDebug() << value << value.type() << value.typeName();
         if (value.type() == QVariant::String) {
-
             auto widget = this->createSettingString(groupKey, key, description, value.toString(), editable);
+            layout->addWidget(widget);
+        } else if (value.type() == QVariant::Bool) {
+            auto widget = this->createSettingBool(groupKey, key, description, value.toBool(), editable);
             layout->addWidget(widget);
         }
     }
@@ -164,6 +168,22 @@ QWidget* PSettingsPage::createSettingString(const QString& group, const QString&
     return widget;
 }
 
+QWidget* PSettingsPage::createSettingBool(const QString& group, const QString& key, const QString& description, bool value, bool editable)
+{
+    auto [widget, layout] = this->createSettingHeader(group, key, description);
+
+    auto edit = new QCheckBox();
+    edit->setObjectName("itemEdit");
+    edit->setEnabled(editable);
+    edit->setChecked(value);
+    connect(edit, &QCheckBox::toggled, this, [=](bool checked){
+        settings.setValue(group + "/" + key, checked);
+        emit this->settingUpdated(group + "/" + key, checked);
+    });
+    layout->addWidget(edit);
+
+    return widget;
+}
 
 
 

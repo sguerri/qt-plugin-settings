@@ -39,6 +39,7 @@ private:
 
     QPair<QWidget*, QVBoxLayout*> createSettingHeader(const QString& group, const QString& key, const QString& description);
     QWidget* createSettingString(const QString& group, const QString& key, const QString& description, const QString& value, bool editable);
+    QWidget* createSettingBool(const QString& group, const QString& key, const QString& description, bool value, bool editable);
 
 signals:
     void settingUpdated(const QString& key, const QVariant& value);

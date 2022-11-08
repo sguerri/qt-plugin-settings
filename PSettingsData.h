@@ -16,14 +16,18 @@ public:
     void endGroup() { this->m_group = "application"; }
 
     void addString(const QString& name, const QString& defaultValue, const QString& description = "", bool visible = true, bool editable = true);
+    void addBool(const QString& name, bool defaultValue, const QString& description = "", bool visible = true, bool editable = true);
     void setValue(const QString& name, const QVariant& value);
     QVariant value(const QString& name, const QVariant& defaultValue) const;
     QString valueString(const QString& name) const;
+    bool valueBool(const QString& name) const;
     void remove(const QString& name);
 
 private:
     QSettings m_settings;
     QString m_group;
+
+    void addValue(const QString& name, const QVariant& defaultValue, const QString& description, bool visible, bool editable);
 };
 
 #endif // PSETTINGSDATA_H
